@@ -87,11 +87,16 @@ public class Game {
 
 		if (!inputS.equals(getCommand("stop"))){
 			if (inputS.equals(getCommand("list"))){
+				println("Type in a number to select a save, or enter " + getCommand("back") + " to go back");
 				File folder = new File(location);
 				File[] listOfFiles = folder.listFiles();
 				for (int i = 0; i < listOfFiles.length; i++){
-					println("" + listOfFiles[i].getName());
+					println(i + ": " + listOfFiles[i].getName());
 				}
+				inputS = input.nextLine();
+				//TODO: Put some error catching here.
+				currentSave = listOfFiles[Integer.parseInt(inputS)];
+				println("Loading " + currentSave.getName() + "...");
 			}
 			else{
 				String saveName = inputS;
@@ -113,8 +118,11 @@ public class Game {
 		if (command.equals("stop")){
 			current += stop;
 		}
-		else if{
+		else if(command.equals("list")){
 			current += list;
+		}
+		else{
+			current = "Sorry, command does not exist.";
 		}
 
 		return current;
