@@ -23,6 +23,8 @@ public class Game {
 	public static String inputS;
 	public static String location;
 
+	public static File currentSave;
+
 	/**
 	 * Starts the game.
 	 * 
@@ -56,39 +58,74 @@ public class Game {
 	}
 
 	private static void newGame() {
-		println("Please enter the name of your new campaign.  You can change this later.");
+		println("Please enter the name of your new campaign.  You can change this later.  Enter " + getCommand("stop") + " to exit.");
 		String saveName = input.nextLine();
-
 		String newLocation = location + "\\" + saveName;
-		try {
-			println("Saving game...");
-			/**
-			 * 
-			 */
-			Path path = Paths.get(newLocation);
-			while (Files.exists(path)) {
-				println("A campaign by that name already exists.  Please choose another.");
-				//TODO: Figure otu a better way to do this - shouldn't repeat so much code!
-				saveName = input.nextLine();
-				newLocation = location + "\\" + saveName;
-				path = Paths.get(newLocation);
+
+		if (!saveName.equals(getCommand("stop"))) {
+			try {
+				println("Saving game...");
+				while (fileExists(newLocation)) {
+					println("A campaign by that name already exists.  Please choose another.");
+					saveName = input.nextLine();
+					newLocation = location + "\\" + saveName;
+				}
+				File newSave = new File(newLocation);
+				FileWriter fw = new FileWriter(newSave);
+				fw.write("NAME:" + saveName);
+				fw.close();
+			} catch (IOException iox) {
+				println("Oracle can't do that for some reason.");
+				println("" + iox);
 			}
-			File newSave = new File(newLocation);
-			FileWriter fw = new FileWriter(newSave);
-			fw.write("NAME:" + saveName);
-			fw.close();
-		} catch (IOException iox) {
-			println("Oracle can't do that for some reason.");
-			println("" + iox);
 		}
 	}
 
 	private static void loadGame() {
-		println("Please enter the name of your save.");
+		println("Please enter the name of your save.  Enter " + getCommand("list") + " to see all saves in the current directory.  Enter " + getCommand("stop") + " to exit.");
 		inputS = input.nextLine();
-		String saveName = inputS;
-		String newLocation = location + saveName;
 
+		if (!inputS.equals(getCommand("stop"))){
+			if (inputS.equals(getCommand("list"))){
+				File folder = new File(location);
+				File[] listOfFiles = folder.listFiles();
+				for (int i = 0; i < listOfFiles.length; i++){
+					println("" + listOfFiles[i].getName());
+				}
+			}
+			else{
+				String saveName = inputS;
+				String newLocation = location + saveName;
+
+
+				currentSave = new File(newLocation);
+			}
+		}
+	}
+
+	private static String getCommand(String command){
+		String addition = "/";
+		String stop = "stop";
+		String list = "list";
+
+		String current = addition;
+
+		if (command.equals("stop")){
+			current += stop;
+		}
+		else if{
+			current += list;
+		}
+
+		return current;
+	}
+
+	private static boolean fileExists(String path){
+		Path p = Paths.get(path);
+		if (Files.exists(p)){
+			return true;
+		}
+		return false;
 	}
 
 	// TODO: Figure out how to print this all at once, but format.
