@@ -62,6 +62,7 @@ public class Game {
 		String saveName = input.nextLine();
 		String newLocation = getNewPath(saveName);
 
+		//TODO: Check to make sure savename doesn't equal ANY commands.  Easy to do, just run the command checker and see if it returns "sorry, not a command"
 		if (!saveName.equals(getCommand("stop"))) {
 			try {
 				println("Saving game...");
