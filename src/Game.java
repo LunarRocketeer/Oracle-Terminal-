@@ -60,7 +60,7 @@ public class Game {
 	private static void newGame() {
 		println("Please enter the name of your new campaign.  You can change this later.  Enter " + getCommand("stop") + " to exit.");
 		String saveName = input.nextLine();
-		String newLocation = location + "\\" + saveName;
+		String newLocation = getNewPath(saveName);
 
 		if (!saveName.equals(getCommand("stop"))) {
 			try {
@@ -68,7 +68,8 @@ public class Game {
 				while (fileExists(newLocation)) {
 					println("A campaign by that name already exists.  Please choose another.");
 					saveName = input.nextLine();
-					newLocation = location + "\\" + saveName;
+					//TODO: could probably clean things up here with a do while
+					newLocation = getNewPath(saveName);
 				}
 				File newSave = new File(newLocation);
 				FileWriter fw = new FileWriter(newSave);
@@ -82,30 +83,78 @@ public class Game {
 	}
 
 	private static void loadGame() {
-		println("Please enter the name of your save.  Enter " + getCommand("list") + " to see all saves in the current directory.  Enter " + getCommand("stop") + " to exit.");
-		inputS = input.nextLine();
-
-		if (!inputS.equals(getCommand("stop"))){
-			if (inputS.equals(getCommand("list"))){
-				println("Type in a number to select a save, or enter " + getCommand("back") + " to go back");
-				File folder = new File(location);
-				File[] listOfFiles = folder.listFiles();
-				for (int i = 0; i < listOfFiles.length; i++){
-					println(i + ": " + listOfFiles[i].getName());
+		boolean loading = true;
+		do {
+			println("Please enter the name of your save.  Enter " + getCommand("list") + " to see all saves in the current directory.  Enter " + getCommand("stop") + " to exit.");
+			inputS = input.nextLine();
+			if (inputS.equals(getCommand("stop"))) {
+			loading = false;
+			}
+			else if (inputS.equals(getCommand("list"))) {
+					File save = getSaveFromList();
+					while (save == null && !inputS.equals(getCommand("stop"))){
+						getSaveFromList();
+					}
+					currentSave = save;
+					loading = false;
 				}
-				inputS = input.nextLine();
-				//TODO: Put some error catching here.
-				currentSave = listOfFiles[Integer.parseInt(inputS)];
-				println("Loading " + currentSave.getName() + "...");
-			}
 			else{
-				String saveName = inputS;
-				String newLocation = location + saveName;
+					String saveName = inputS;
+					String newLocation = getNewPath(saveName);
+					if (fileExists(newLocation)) {
+						currentSave = getSaveFromPath(newLocation);
+						loading = false;
+					}
+					else{
+						print("File does not exist.  ");
+					}
+				}
 
+		}while (loading) ;
+		blankLine();
+	}
 
-				currentSave = new File(newLocation);
-			}
+	private static String getNewPath(String currName){
+		return location + "\\" + currName;
+	}
+
+	private static File getSaveFromPath(String path){
+		File save = new File(path);
+		printLoadingMessage(save);
+		return save;
+	}
+
+	private static File getSaveFromList(){
+		println("Type in a number to select a save, or enter " + getCommand("stop") + " to go exit.");
+		File folder = new File(location);
+		File[] listOfFiles = folder.listFiles();
+		for (int i = 0; i < listOfFiles.length; i++){
+			println(i + ": " + listOfFiles[i].getName());
 		}
+		inputS = input.nextLine();
+		if (inputS.equals(getCommand("stop"))){
+			return null;
+		}
+		else {
+			File save = null;
+			int loc = 0;
+			try {
+				loc = Integer.parseInt(inputS);
+			} catch (NumberFormatException e) {
+				println("Invalid input.  Type a number from 0 to " + listOfFiles.length);
+			}
+			if (loc < listOfFiles.length && loc > 0) {
+				save = listOfFiles[Integer.parseInt(inputS)];
+				printLoadingMessage(save);
+			} else {
+				println("Invalid input.  Type a number from 0 to " + listOfFiles.length);
+			}
+			return save;
+		}
+	}
+
+	private static void printLoadingMessage(File save){
+		println("Loading save '" + save.getName() + "'...");
 	}
 
 	private static String getCommand(String command){
@@ -140,6 +189,10 @@ public class Game {
 	public static void printAbout() {
 		println("Oracle is a program meant to manage a D&D style roleplaying game.");
 		println("It can store maps and pictures, take care of stats and enemies, and save campaigns for later.");
+		println("");
+	}
+
+	public static void blankLine(){
 		println("");
 	}
 
