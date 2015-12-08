@@ -12,4 +12,21 @@ import java.io.File;
  */
 public class Game {
     File currentSave;
+    //If the current user is the game's Dungeon Master (this is confirmed via password)
+    boolean isDM;
+    String dmPassword;
+
+    public Game(File saveGame){
+        currentSave = saveGame;
+        isDM = false;
+        readSave();
+    }
+
+    /**
+     * Initialize variables based on save game.  If this is a new game, the current user is automatically
+     * made DM and is prompted for a password.  The user can then add maps, characters, items, and enemies to initialize their game.
+     */
+    private void readSave() {
+
+    }
 }
