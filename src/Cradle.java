@@ -15,7 +15,7 @@ import java.util.Scanner;
  * Handles user input
  * Interacts with Game class
  * <p>
- * v 0.0.1 - Last Updated on December 8th, 2015
+ * v 0.0.1 - Last Updated on December 9th, 2015
  *
  * @author Cameron Miller
  */
