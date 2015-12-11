@@ -1,3 +1,4 @@
+import java.io.Console;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,7 +22,8 @@ import java.util.Scanner;
  */
 public class Cradle {
 
-    public static boolean running;
+    public static boolean mainMenu;
+    public static boolean gameMenu;
     public static Scanner input;
     public static String inputS;
     public static String location;
@@ -34,16 +36,18 @@ public class Cradle {
      * @param args
      */
     public static void main(String[] args) {
-        running = true;
+        mainMenu = true;
+        gameMenu = false;
         input = new Scanner(System.in);
         // TODO: Figure out how to change this location automatically
         location = "\\\\CSSDFS04\\Student_m$\\csmiller\\My Documents\\CS Projects\\Save Games";
 
-        while (running) {
+        while (mainMenu) {
             println("Welcome to Oracle.  Enter input.");
             println("1 - New Game");
             println("2 - Load Game");
-            println("3 - About");
+            println("3 - Settings.");
+            println("4 - About");
 
             inputS = input.nextLine();
             if (inputS.equals("1")) {
@@ -51,15 +55,26 @@ public class Cradle {
             } else if (inputS.equals("2")) {
                 loadGame();
             } else if (inputS.equals("3")) {
+                settings();
+            }
+            else if(inputS.equals("4")){
                 printAbout();
-            } else {
-                println("it don't work");
+            }
+            else {
+                println("Invalid input.");
             }
         }
-        println("Shutting down...");
+        blankLine();
+        while(gameMenu){
+            enterGame();
+        }
+        println("Thank you for using Oracle!  Now shutting down...");
 
     }
 
+    private static void settings(){
+        println("");
+    }
 
     /**
      * Creates a new save which is named based on user input.
@@ -86,10 +101,22 @@ public class Cradle {
                 fw.write("NAME:" + saveName);
                 fw.close();
                 currentSave = newSave;
+                switchMenus();
             } catch (IOException iox) {
                 println("Oracle can't do that for some reason.");
                 println("" + iox);
             }
+        }
+    }
+
+    private static void switchMenus(){
+        if (gameMenu){
+            gameMenu = false;
+            mainMenu = true;
+        }
+        else{
+            gameMenu = true;
+            mainMenu = false;
         }
     }
 
@@ -111,12 +138,14 @@ public class Cradle {
                 }
                 currentSave = save;
                 loading = false;
+                switchMenus();
             } else {
                 String saveName = inputS;
                 String newLocation = getNewPath(saveName);
                 if (fileExists(newLocation)) {
                     currentSave = getSaveFromPath(newLocation);
                     loading = false;
+                    switchMenus();
                 } else {
                     print("File does not exist.  ");
                 }
@@ -124,6 +153,18 @@ public class Cradle {
 
         } while (loading);
         blankLine();
+
+    }
+
+    private static void enterGame(){
+
+        println("Welcome to " + currentSave.getName());
+        println("1 - Enter realm.");
+        println("2 - Add content.");
+        println("3 - Game info and settings.");
+        println("4 - Return to Main Menu.");
+
+        String inputS = input.nextLine();
     }
 
     /**
