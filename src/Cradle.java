@@ -72,8 +72,37 @@ public class Cradle {
 
     }
 
+    /**
+     * Menu for settings.
+     */
+    //TODO: Putting in a valid path doesn't work.
+    //TODO: Establish an 'install' folder to keep these settings safe.
     private static void settings(){
-        println("");
+        boolean settings = true;
+        String inputS;
+        println("Settings");
+        while(settings) {
+                        println("1- Set Directory");
+            println("2 - Return to Main Menu");
+            inputS = input.nextLine();
+            if (inputS.equals("1")){
+                println("Please enter directory path");
+                inputS = input.nextLine();
+                File file = new File(inputS + "\\tempCheckFile.bat");
+                if (file.isDirectory()){
+                    file = file.getParentFile();
+                }
+                else{
+                    println("Meh.");
+                }
+            }
+            else if (inputS.equals("2")){
+                settings = false;
+            }
+            else{
+                println("Invalid input.");
+            }
+        }
     }
 
     /**
@@ -109,6 +138,9 @@ public class Cradle {
         }
     }
 
+    /**
+     * Switches booleans to allow for movement between the Main Menu and the Game Menu.
+     */
     private static void switchMenus(){
         if (gameMenu){
             gameMenu = false;
@@ -156,6 +188,9 @@ public class Cradle {
 
     }
 
+    /**
+     * Enters new menu that allows for interaction with individual save files.
+     */
     private static void enterGame(){
 
         println("Welcome to " + currentSave.getName());
