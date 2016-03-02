@@ -24,6 +24,7 @@ public class Cradle {
 
     public static boolean mainMenu;
     public static boolean gameMenu;
+    private static boolean running;
     public static Scanner input;
     public static String inputS;
     public static String location;
@@ -38,35 +39,38 @@ public class Cradle {
     public static void main(String[] args) {
         mainMenu = true;
         gameMenu = false;
+        running = true;
         input = new Scanner(System.in);
         // TODO: Figure out how to change this location automatically
         location = "\\\\CSSDFS04\\Student_m$\\csmiller\\My Documents\\CS Projects\\Save Games";
+        while(running) {
+            while (mainMenu && running) {
+                println("Welcome to Oracle.  Enter input.");
+                println("1 - New Game");
+                println("2 - Load Game");
+                println("3 - Settings.");
+                println("4 - About");
+                println("5 - Quit");
 
-        while (mainMenu) {
-            println("Welcome to Oracle.  Enter input.");
-            println("1 - New Game");
-            println("2 - Load Game");
-            println("3 - Settings.");
-            println("4 - About");
-
-            inputS = input.nextLine();
-            if (inputS.equals("1")) {
-                newGame();
-            } else if (inputS.equals("2")) {
-                loadGame();
-            } else if (inputS.equals("3")) {
-                settings();
+                inputS = input.nextLine();
+                if (inputS.equals("1")) {
+                    newGame();
+                } else if (inputS.equals("2")) {
+                    loadGame();
+                } else if (inputS.equals("3")) {
+                    settings();
+                } else if (inputS.equals("4")) {
+                    printAbout();
+                } else if (inputS.equals("5")) {
+                    running = false;
+                } else {
+                    println("Invalid input.");
+                }
             }
-            else if(inputS.equals("4")){
-                printAbout();
+            blankLine();
+            while (gameMenu && running) {
+                enterGame();
             }
-            else {
-                println("Invalid input.");
-            }
-        }
-        blankLine();
-        while(gameMenu){
-            enterGame();
         }
         println("Thank you for using Oracle!  Now shutting down...");
 
@@ -77,29 +81,26 @@ public class Cradle {
      */
     //TODO: Putting in a valid path doesn't work.
     //TODO: Establish an 'install' folder to keep these settings safe.
-    private static void settings(){
+    private static void settings() {
         boolean settings = true;
         String inputS;
         println("Settings");
-        while(settings) {
-                        println("1- Set Directory");
+        while (settings) {
+            println("1- Set Directory");
             println("2 - Return to Main Menu");
             inputS = input.nextLine();
-            if (inputS.equals("1")){
+            if (inputS.equals("1")) {
                 println("Please enter directory path");
                 inputS = input.nextLine();
                 File file = new File(inputS + "\\tempCheckFile.bat");
-                if (file.isDirectory()){
+                if (file.isDirectory()) {
                     file = file.getParentFile();
-                }
-                else{
+                } else {
                     println("Meh.");
                 }
-            }
-            else if (inputS.equals("2")){
+            } else if (inputS.equals("2")) {
                 settings = false;
-            }
-            else{
+            } else {
                 println("Invalid input.");
             }
         }
@@ -141,12 +142,11 @@ public class Cradle {
     /**
      * Switches booleans to allow for movement between the Main Menu and the Game Menu.
      */
-    private static void switchMenus(){
-        if (gameMenu){
+    private static void switchMenus() {
+        if (gameMenu) {
             gameMenu = false;
             mainMenu = true;
-        }
-        else{
+        } else {
             gameMenu = true;
             mainMenu = false;
         }
@@ -193,7 +193,7 @@ public class Cradle {
     /**
      * Enters new menu that allows for interaction with individual save files.
      */
-    private static void enterGame(){
+    private static void enterGame() {
 
         println("Welcome to " + currentSave.getName());
         println("1 - Enter realm.");
@@ -202,11 +202,24 @@ public class Cradle {
         println("4 - Return to Main Menu.");
 
         String inputS = input.nextLine();
+        if (inputS.equals("1")) {
+
+        } else if (inputS.equals("2")) {
+
+        } else if (inputS.equals("3")) {
+
+        } else if (inputS.equals("4")) {
+            blankLine();
+            switchMenus();
+        } else {
+            println("Invalid input.");
+        }
     }
 
     /**
      * Gets the path for a save.
      * Adds the file name to the main directory.
+     *
      * @param currName
      * @return
      */
@@ -225,6 +238,7 @@ public class Cradle {
 
     /**
      * Prints a loading message.
+     *
      * @param save
      */
     private static void printLoadingMessage(File save) {
@@ -233,6 +247,7 @@ public class Cradle {
 
     /**
      * Displays a list of the current saves in a directory.  User enters a number that corresponds with a save.
+     *
      * @return
      */
     private static File getSaveFromList() {
@@ -266,6 +281,7 @@ public class Cradle {
 
     /**
      * Contains all / commands usable in the main menu.
+     *
      * @param command
      * @return
      */
@@ -289,6 +305,7 @@ public class Cradle {
 
     /**
      * Checks to see if an inputed path is legit.
+     *
      * @param path
      * @return
      */
@@ -319,6 +336,7 @@ public class Cradle {
 
     /**
      * Lazy alternative to System.out.println
+     *
      * @param s
      */
     public static void println(String s) {
@@ -327,6 +345,7 @@ public class Cradle {
 
     /**
      * Lazy alternative to System.out.print
+     *
      * @param s
      */
     public static void print(String s) {

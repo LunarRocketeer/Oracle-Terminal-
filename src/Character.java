@@ -15,9 +15,9 @@ public class Character {
     public Character(String charName){
         name = charName;
 
-        conditions = new ArrayList<String>();
-        inventory = new ArrayList<Item>();
-        equipped = new ArrayList<Armor>();
+        conditions = new ArrayList<>();
+        inventory = new ArrayList<>();
+        equipped = new ArrayList<>();
     }
 
     public void addToInventory(Item i){
