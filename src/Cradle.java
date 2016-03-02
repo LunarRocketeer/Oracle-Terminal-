@@ -168,9 +168,11 @@ public class Cradle {
                 while (save == null && !inputS.equals(getCommand("stop"))) {
                     getSaveFromList();
                 }
-                currentSave = save;
                 loading = false;
-                switchMenus();
+                if (!inputS.equals(getCommand("stop"))) {
+                    currentSave = save;
+                    switchMenus();
+                }
             } else {
                 String saveName = inputS;
                 String newLocation = getNewPath(saveName);
